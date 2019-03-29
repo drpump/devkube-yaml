@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  template:
+    metadata:
+      labels:
+        role: web-server
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: "nginx:latest"
+          volumeMounts:
+              # name must match the volume name below
+              - name: nfs-mount
+                mountPath: "/usr/share/nginx/html"
+          ports:
+            - name: web
+              containerPort: 80
+      volumes:
+        - name: nfs-mount
+          nfs:
+            server: 10.244.1.24
+            path: "/"

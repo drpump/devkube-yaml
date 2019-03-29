@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: alpine
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: alpine
+    spec:
+      containers:
+        - name: alpine
+          image: "markeijsermans/debug:alpine"
+          command:
+            - sleep
+            - "9999999"
+          volumeMounts:
+              # name must match the volume name below
+              - name: nfs-mount
+                mountPath: "/mnt/nfs"
+      volumes:
+        - name: nfs-mount
+          nfs:
+            server: 10.244.1.24
+            path: "/"
